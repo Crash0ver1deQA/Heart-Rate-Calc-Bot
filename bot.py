@@ -49,7 +49,7 @@ async def calculate(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def main():
     # Токен API
-    application = ApplicationBuilder().token("7981298355:AAHHZRXNFpYMh7zz_WSPKbCg-Nfp3kMW5R0").build()
+    application = ApplicationBuilder().token("7668414589:AAHuRPic4g-Dvy6mv1o1cmwHquICYA6rRLI").build()
     
     # Обработчики команд
     application.add_handler(CommandHandler("start", start))
