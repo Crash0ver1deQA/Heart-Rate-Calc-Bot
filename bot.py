@@ -22,7 +22,7 @@ def calculate_zones(age: int, resting_hr: int):
 
 # Обработчик команды /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text('Привет! Чтобы рассчитать ЧСС, введи свой возраст и частоту сердечных сокращений в покое в формате: "возраст, ЧСС".')
+    await update.message.reply_text('Привет! Чтобы рассчитать ЧСС, введи свой возраст и частоту сердечных сокращений в покое в формате: "Возраст, ЧСС".')
 
 # Обработчик текстовых сообщений
 async def calculate(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -48,8 +48,8 @@ async def calculate(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_text('Ошибка! Пожалуйста, введите данные в формате: "возраст, ЧСС".')
 
 async def main():
-    # Вставьте свой токен API здесь
-    application = ApplicationBuilder().token("7522709986:AAGStGC1Vo-9YcA7RELk7UGUO6e1gkM-RHM").build()
+    # Токен API
+    application = ApplicationBuilder().token("7981298355:AAHHZRXNFpYMh7zz_WSPKbCg-Nfp3kMW5R0").build()
     
     # Обработчики команд
     application.add_handler(CommandHandler("start", start))
