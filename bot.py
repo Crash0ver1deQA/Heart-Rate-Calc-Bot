@@ -1,6 +1,6 @@
 import logging
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes, ConversationHandler
+from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes, ConversationHandler, CallbackQueryHandler
 
 # Включаем логирование
 logging.basicConfig(
@@ -66,12 +66,21 @@ async def get_resting_hr(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
         # Форматируем и отправляем ответ
         response = (f'Максимальная ЧСС: {max_hr} уд./мин.\n'
-                    f'Пульсовая зона 1 (50-60%): {zone_1[0]} — {zone_1[1]} уд./мин.\n'
+                    f'Пульсовая зона 1 (50-60%): {zone_1[0]} - {zone_1[1]} уд./мин.\n'
                     f'Пульсовая зона 2 (60-70%): {zone_2[0]} - {zone_2[1]} уд./мин.\n'
                     f'Пульсовая зона 3 (70-80%): {zone_3[0]} - {zone_3[1]} уд./мин.\n'
                     f'Пульсовая зона 4 (80-90%): {zone_4[0]} - {zone_4[1]} уд./мин.\n'
                     f'Пульсовая зона 5 (90-100%): {zone_5[0]} - {zone_5[1]} уд./мин.')
         await update.message.reply_text(response)
+
+        # Добавляем кнопку "Начать заново" с использованием InlineKeyboardButton
+        keyboard = [[InlineKeyboardButton("Начать заново", callback_data="start")]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+
+        await update.message.reply_text(
+            "Если хотите начать заново, нажмите на кнопку ниже:",
+            reply_markup=reply_markup
+        )
 
         # Очищаем данные после расчета
         del user_data[user_id]
@@ -85,6 +94,14 @@ async def get_resting_hr(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await update.message.reply_text("Отменено. Введите /start для начала заново.")
     return ConversationHandler.END
+
+# Обработчик для нажатий на inline-кнопки
+async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()  # Подтверждаем нажатие кнопки
+
+    if query.data == "start":
+        await start(query.message.chat, context)  # Обновлено для использования query.message.chat
 
 # Главная функция для запуска бота
 async def main():
@@ -103,6 +120,7 @@ async def main():
 
     # Добавляем обработчики
     application.add_handler(conv_handler)
+    application.add_handler(CallbackQueryHandler(button))  # Здесь подключаем обработчик кнопок
 
     # Запуск бота
     await application.run_polling()
