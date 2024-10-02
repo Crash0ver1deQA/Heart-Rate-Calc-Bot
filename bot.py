@@ -74,7 +74,7 @@ async def get_resting_hr(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text(response)
 
         # Добавляем кнопку "Начать заново" с использованием InlineKeyboardButton
-        keyboard = [[InlineKeyboardButton("Начать заново", callback_data="start")]]
+        keyboard = [[InlineKeyboardButton("Начать заново", callback_data="restart")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
         await update.message.reply_text(
@@ -100,8 +100,11 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()  # Подтверждаем нажатие кнопки
 
-    if query.data == "start":
-        await start(query.message.chat, context)  # Обновлено для использования query.message.chat
+    if query.data == "restart":
+        # Убираем клавиатуру (inline-кнопки)
+        await query.edit_message_reply_markup(reply_markup=None)
+        # Отправляем команду /start пользователю для перезапуска диалога
+        await query.message.reply_text("/start")
 
 # Главная функция для запуска бота
 async def main():
