@@ -109,7 +109,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # Главная функция для запуска бота
 async def main():
     # Токен бота
-    application = ApplicationBuilder().token("7668414589:AAHuRPic4g-Dvy6mv1o1cmwHquICYA6rRLI").build()
+    application = ApplicationBuilder().token("TOKEN").build()
 
     # Определяем ConversationHandler для обработки состояний
     conv_handler = ConversationHandler(
